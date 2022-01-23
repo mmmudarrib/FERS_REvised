@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "501806462971",
+    "project_id": "fers-7580",
+    "storage_bucket": "fers-7580.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501806462971:android:6b7832d64a7dc51b003d5e",
+        "android_client_info": {
+          "package_name": "com.example.fers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501806462971-22bsj70q8s08a0nsacahf7u311eh2pn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fers",
+            "certificate_hash": "d0014027c780f62aac829ac1af1be020954573dd"
+          }
+        },
+        {
+          "client_id": "501806462971-u51dq3vkabcjpl3gvi9e7o43r4ibdgrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo-1soThDLaJH4qewSfkeLAUrx-ubz6i0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501806462971-u51dq3vkabcjpl3gvi9e7o43r4ibdgrb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

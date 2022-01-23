@@ -1,8 +1,13 @@
+import 'package:fers/database/auth_methods.dart';
+import 'package:fers/database/user_api.dart';
+import 'package:fers/models/appuser.dart';
+import 'package:fers/widgets/custom_toast.dart';
+import 'package:fers/widgets/show_loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fers/pages/forgot_password_page.dart';
 import 'package:fers/widgets/button_widget.dart';
-
 import 'dashboard.dart';
 
 class AuthPage extends StatefulWidget {
@@ -296,7 +301,8 @@ class _AuthPageState extends State<AuthPage> {
                                   );
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: size.height * 0.03),
+                                  padding:
+                                      EdgeInsets.only(top: size.height * 0.03),
                                   child: Text(
                                     "Forgot your password?",
                                     style: TextStyle(
@@ -340,7 +346,36 @@ class _AuthPageState extends State<AuthPage> {
                                               context,
                                               size);
                                         } else {
-                                          print('register');
+                                          showLoadingDislog(context);
+                                          final User? _user =
+                                              await AuthMethods()
+                                                  .signupWithEmailAndPassword(
+                                            email: textfieldsStrings[2],
+                                            password: textfieldsStrings[3],
+                                          );
+                                          if (_user != null) {
+                                            final AppUser _appUser = AppUser(
+                                              uid: _user.uid,
+                                              first_name: textfieldsStrings[0],
+                                              last_name: textfieldsStrings[1],
+                                              email: textfieldsStrings[2],
+                                            );
+                                            final bool _okay = await UserAPI()
+                                                .addUser(_appUser);
+                                            if (_okay) {
+                                              CustomToast.successToast(
+                                                message:
+                                                    'Register Successfully',
+                                              );
+                                              setState(() {
+                                                register = false;
+                                              });
+
+                                              Navigator.of(context).pop();
+                                            } else {
+                                              Navigator.of(context).pop();
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -351,9 +386,24 @@ class _AuthPageState extends State<AuthPage> {
                               //validation for login
                               if (_emailKey.currentState!.validate()) {
                                 if (_passwordKey.currentState!.validate()) {
-                                  print('login');
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (BuildContext context) => const ContainerWidget()));
+                                  showLoadingDislog(context);
+                                  final User? _user = await AuthMethods()
+                                      .loginWithEmailAndPassword(
+                                    textfieldsStrings[2],
+                                    textfieldsStrings[3],
+                                  );
+                                  print('User: $_user');
+                                  if (_user != null) {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const ContainerWidget()));
+                                  } else {
+                                    Navigator.of(context).pop();
+                                    CustomToast.errorToast(
+                                        message:
+                                            "Invalid Password or Username");
+                                  }
                                 }
                               }
                             }

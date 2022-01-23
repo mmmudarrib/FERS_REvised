@@ -1,8 +1,5 @@
 import 'package:fers/pages/magnitude.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'auth_page.dart';
 
 class ContainerWidget extends StatefulWidget {
   const ContainerWidget({Key? key}) : super(key: key);
