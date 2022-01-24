@@ -1,5 +1,10 @@
-import 'package:fers/pages/magnitude.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fers/database/user_api.dart';
+import 'package:fers/database/userlocaldata.dart';
+import 'package:fers/models/appuser.dart';
+import 'package:fers/models/sosrequest.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ContainerWidget extends StatefulWidget {
   const ContainerWidget({Key? key}) : super(key: key);
@@ -10,6 +15,8 @@ class ContainerWidget extends StatefulWidget {
 
 class _ContainerWidgetState extends State<ContainerWidget> {
   @override
+  LocationUser _currentLocation = UserLocalData.getLocation;
+  bool _sossent = false;
   Widget build(BuildContext context) {
     // Figma Flutter Generator ContainerWidget - RECTANGLE
 
@@ -78,9 +85,9 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height / 18),
                 ),
-                const Text(
-                  'Hello User',
-                  style: TextStyle(
+                Text(
+                  'Hello ' + UserLocalData.getName,
+                  style: const TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     fontFamily: 'Poppins',
                     fontSize: 20,
@@ -89,16 +96,19 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                 ),
                 GestureDetector(
                   onDoubleTap: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => const Magnitude()));
+                    sendsos();
                   },
                   child: SizedBox(
-                    width: 400,
-                    height: 400,
-                    child: CustomPaint(
-                      painter: OpenPainter(),
-                    ),
-                  ),
+                      width: 400,
+                      height: 400,
+                      child: Container(
+                        margin: EdgeInsets.all(100.0),
+                        decoration: BoxDecoration(
+                            color: _sossent
+                                ? Colors.greenAccent
+                                : Colors.redAccent,
+                            shape: BoxShape.circle),
+                      )),
                 ),
               ],
             ),
@@ -145,17 +155,36 @@ class _ContainerWidgetState extends State<ContainerWidget> {
       ),
     );
   }
-}
 
-class OpenPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint1 = Paint()
-      ..color = const Color(0xffEA6666)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(const Offset(200, 200), 100, paint1);
+  void sendsos() async {
+    if (!_sossent) {
+      AppUser? user = await UserAPI().allDriversnearby(_currentLocation);
+      sosrequest sos = sosrequest(
+          userUid: UserLocalData.getUID, driverUid: user!.uid, status: 1);
+
+      await FirebaseFirestore.instance
+          .collection('request')
+          .doc(UserLocalData.getUID + "-" + user.uid)
+          .set(sos.toJson());
+      setState(() {
+        _sossent = true;
+      });
+    }
   }
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  void updatelocation() async {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      LocationUser loc =
+          LocationUser(lat: position.latitude, long: position.longitude);
+      setState(() {
+        _currentLocation = loc;
+      });
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(UserLocalData.getUID)
+        .update({'location': _currentLocation});
+  }
 }

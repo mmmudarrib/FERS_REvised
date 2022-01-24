@@ -2,9 +2,12 @@ import 'package:fers/pages/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'database/userlocaldata.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  UserLocalData.init();
   runApp(const App());
 }
 

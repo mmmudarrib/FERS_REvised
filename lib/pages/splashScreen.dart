@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:fers/pages/auth_page.dart';
+import 'package:fers/pages/login.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,8 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
         const Duration(seconds: 2),
-            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => const AuthPage())));
+        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => const LoginScreen())));
   }
 
   @override
@@ -25,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset('assets/splash.png'),
-
       ),
     );
   }

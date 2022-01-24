@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fers/widgets/custom_toast.dart';
+import 'package:geolocator/geolocator.dart';
 import '../models/appuser.dart';
 
 class UserAPI {
@@ -23,5 +24,24 @@ class UserAPI {
       return false;
     });
     return true;
+  }
+
+  Future<AppUser?> allDriversnearby(LocationUser locationUser) async {
+    AppUser? _user;
+    double min = -100000;
+    final QuerySnapshot<Map<String, dynamic>> doc = await _instance
+        .collection(_collection)
+        .where('isDriver', isEqualTo: true)
+        .get();
+    for (DocumentSnapshot<Map<String, dynamic>> element in doc.docs) {
+      final AppUser _temp = AppUser.fromDocument(element);
+      double dis = Geolocator.distanceBetween(_temp.location.lat,
+          _temp.location.long, locationUser.long, locationUser.long);
+      if (dis >= min) {
+        min = dis;
+        _user = _temp;
+      }
+    }
+    return _user;
   }
 }
