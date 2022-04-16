@@ -1,21 +1,28 @@
 class sosrequest {
-  String? userUid;
-  String? driverUid;
-  int? status;
+  late String userUid;
+  late String driverUid;
+  late int status;
+  late int magnitude;
 
-  sosrequest({this.userUid, this.driverUid, this.status});
+  sosrequest(
+      {required this.userUid,
+      required this.driverUid,
+      required this.status,
+      required this.magnitude});
 
   sosrequest.fromJson(Map<String, dynamic> json) {
     userUid = json['user_uid'];
     driverUid = json['driver_uid'];
     status = json['status'];
+    magnitude = json['magnitude'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_uid'] = this.userUid;
-    data['driver_uid'] = this.driverUid;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_uid'] = userUid;
+    data['driver_uid'] = driverUid;
+    data['status'] = status;
+    data['magnitude'] = magnitude;
     return data;
   }
 }

@@ -1,8 +1,9 @@
-import 'package:fers/pages/login.dart';
-import 'package:fers/pages/register_driver.dart';
-import 'package:fers/pages/register_person.dart';
 import 'package:fers/widgets/custom_text_button.dart';
 import 'package:flutter/material.dart';
+
+import 'login.dart';
+import 'register_driver.dart';
+import 'register_person.dart';
 
 class RegisterationTypeScreen extends StatelessWidget {
   const RegisterationTypeScreen({Key? key}) : super(key: key);

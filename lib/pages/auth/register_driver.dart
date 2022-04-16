@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:fers/database/auth_methods.dart';
 import 'package:fers/database/user_api.dart';
 import 'package:fers/models/appuser.dart';
-import 'package:fers/pages/login.dart';
 import 'package:fers/widgets/button_widget.dart';
 import 'package:fers/widgets/custom_textformfield.dart';
 import 'package:fers/widgets/custom_toast.dart';
@@ -15,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'login.dart';
 
 class RegisterDriver extends StatefulWidget {
   const RegisterDriver({Key? key}) : super(key: key);

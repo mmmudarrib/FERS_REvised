@@ -33,7 +33,6 @@ class _RegisterPersonState extends State<RegisterPerson> {
   bool permission = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getCurrentLocation();
   }
@@ -335,7 +334,7 @@ class _RegisterPersonState extends State<RegisterPerson> {
   }
 
   _getCurrentLocation() async {
-    requestLocationPermission();
+    await requestLocationPermission();
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {

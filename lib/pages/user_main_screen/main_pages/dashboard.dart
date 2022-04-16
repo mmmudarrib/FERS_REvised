@@ -14,30 +14,29 @@ class ContainerWidget extends StatefulWidget {
 }
 
 class _ContainerWidgetState extends State<ContainerWidget> {
-  @override
   LocationUser _currentLocation = UserLocalData.getLocation;
   bool _sossent = false;
+  int mag = 0;
+  @override
   Widget build(BuildContext context) {
     // Figma Flutter Generator ContainerWidget - RECTANGLE
 
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 34,
-          ),
           Container(
             decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(120, 109, 245, 1),
-                    Color.fromRGBO(166, 158, 255, 1),
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50.0),
-                  bottomRight: Radius.circular(50.0),
-                )),
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(120, 109, 245, 1),
+                  Color.fromRGBO(166, 158, 255, 1),
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(50.0),
+                bottomRight: Radius.circular(50.0),
+              ),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -47,13 +46,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    IconButton(
-                      icon: const Icon(
-                        Icons.dehaze_sharp,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => {},
-                    ),
+                    Container(),
                     const Text(
                       'FERS',
                       textAlign: TextAlign.center,
@@ -95,62 +88,28 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   ),
                 ),
                 GestureDetector(
-                  onDoubleTap: () {
-                    sendsos();
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          _buildPopupDialog(context),
+                    );
                   },
                   child: SizedBox(
-                      width: 400,
-                      height: 400,
-                      child: Container(
-                        margin: EdgeInsets.all(100.0),
-                        decoration: BoxDecoration(
-                            color: _sossent
-                                ? Colors.greenAccent
-                                : Colors.redAccent,
-                            shape: BoxShape.circle),
-                      )),
+                    width: 400,
+                    height: 400,
+                    child: Container(
+                      margin: const EdgeInsets.all(100.0),
+                      decoration: BoxDecoration(
+                          color:
+                              _sossent ? Colors.greenAccent : Colors.redAccent,
+                          shape: BoxShape.circle),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height / 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width / 10),
-                  child: const Text(
-                    'My Service',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color.fromRGBO(0, 0, 0, 1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                      height: 1,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width / 12),
-                  child: const Text(
-                    'View All',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: 'SF Pro Text',
-                        fontSize: 12,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.normal,
-                        height: 1),
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );
@@ -160,7 +119,10 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     if (!_sossent) {
       AppUser? user = await UserAPI().allDriversnearby(_currentLocation);
       sosrequest sos = sosrequest(
-          userUid: UserLocalData.getUID, driverUid: user!.uid, status: 1);
+          userUid: UserLocalData.getUID,
+          driverUid: user!.uid,
+          status: 1,
+          magnitude: mag);
 
       await FirebaseFirestore.instance
           .collection('request')
@@ -186,5 +148,89 @@ class _ContainerWidgetState extends State<ContainerWidget> {
         .collection('users')
         .doc(UserLocalData.getUID)
         .update({'location': _currentLocation});
+  }
+
+  Widget _buildPopupDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Magnitude'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CheckboxListTile(
+            title: const Text('Police'),
+            subtitle: const Text('For security related emergency'),
+            secondary: const Icon(Icons.emergency),
+            autofocus: false,
+            activeColor: Colors.green,
+            checkColor: Colors.white,
+            selected: mag == 1,
+            value: mag == 1,
+            onChanged: (bool? value) {
+              setState(() {
+                mag = 1;
+              });
+            },
+          ),
+          const Divider(
+            thickness: 2,
+          ),
+          CheckboxListTile(
+            title: const Text('Ambulance'),
+            subtitle: const Text('For medical related emergency'),
+            secondary: const Icon(Icons.emergency),
+            autofocus: false,
+            activeColor: Colors.green,
+            checkColor: Colors.white,
+            selected: mag == 2,
+            value: mag == 2,
+            onChanged: (bool? value) {
+              setState(() {
+                mag = 2;
+              });
+            },
+          ),
+          const Divider(
+            thickness: 2,
+          ),
+          CheckboxListTile(
+            title: const Text('Fire Brigade'),
+            subtitle: const Text('For fire related emergency'),
+            secondary: const Icon(Icons.emergency),
+            autofocus: false,
+            activeColor: Colors.green,
+            checkColor: Colors.white,
+            selected: mag == 3,
+            value: mag == 3,
+            onChanged: (bool? value) {
+              setState(() {
+                mag = 3;
+                print("$mag");
+              });
+            },
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Close',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            'Request Now',
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+        ),
+      ],
+    );
   }
 }

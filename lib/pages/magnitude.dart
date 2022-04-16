@@ -82,8 +82,8 @@ class _MagnitudeState extends State<Magnitude> {
               ),
             ),
             Padding(
-              padding:
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width/1.3),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 1.3),
               child: TextButton.icon(
                 onPressed: null,
                 icon: const Icon(

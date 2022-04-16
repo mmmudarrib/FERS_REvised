@@ -17,7 +17,6 @@ class DriverDashboard extends StatefulWidget {
 class _DriverDashboardState extends State<DriverDashboard> {
   bool online = false;
   LocationUser _currentLocation = UserLocalData.getLocation;
-  late Position _currentPosition;
   @override
   void initState() {
     super.initState();
@@ -191,7 +190,6 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
   Future<sosrequest?> getrequests() async {
     sosrequest? _req;
-    double min = -100000;
     final QuerySnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection('request')

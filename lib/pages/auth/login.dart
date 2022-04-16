@@ -1,8 +1,7 @@
 import 'package:fers/database/auth_methods.dart';
 import 'package:fers/database/userlocaldata.dart';
-import 'package:fers/pages/driver_dashboard.dart';
-import 'package:fers/pages/register_person.dart';
-import 'package:fers/pages/registeration_type_screen.dart';
+import 'package:fers/pages/auth/registeration_type_screen.dart';
+import 'package:fers/pages/driver_main_pages/driver_dashboard.dart';
 import 'package:fers/widgets/button_widget.dart';
 import 'package:fers/widgets/custom_textformfield.dart';
 import 'package:fers/widgets/custom_toast.dart';
@@ -12,8 +11,7 @@ import 'package:fers/widgets/show_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'dashboard.dart';
+import '../user_main_screen/main_screen.dart';
 import 'forgot_password_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -155,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              const ContainerWidget()));
+                                              const MainScreen()));
                                 }
                               } else {
                                 CustomToast.errorToast(

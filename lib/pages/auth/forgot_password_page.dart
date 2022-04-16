@@ -142,12 +142,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               Colors.white,
                             ],
                             onPressed: () async {
-                              if (_emailKey.currentState!.validate()) {
-                                print('$email forgot password');
-                              }
+                              if (_emailKey.currentState!.validate()) {}
                             }),
                       ),
-
                     ],
                   ),
                 ),
