@@ -1,16 +1,16 @@
-class sosrequest {
+class Sosrequest {
   late String userUid;
   late String driverUid;
   late int status;
   late int magnitude;
 
-  sosrequest(
+  Sosrequest(
       {required this.userUid,
       required this.driverUid,
       required this.status,
       required this.magnitude});
 
-  sosrequest.fromJson(Map<String, dynamic> json) {
+  Sosrequest.fromJson(Map<String, dynamic> json) {
     userUid = json['user_uid'];
     driverUid = json['driver_uid'];
     status = json['status'];

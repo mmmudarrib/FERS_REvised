@@ -3,6 +3,7 @@ import 'package:fers/database/user_api.dart';
 import 'package:fers/database/userlocaldata.dart';
 import 'package:fers/models/appuser.dart';
 import 'package:fers/models/sosrequest.dart';
+import 'package:fers/pages/driver_main_pages/driver_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,148 +27,72 @@ class _DriverDashboardState extends State<DriverDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 34,
-          ),
-          Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(120, 109, 245, 1),
-                    Color.fromRGBO(166, 158, 255, 1),
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50.0),
-                  bottomRight: Radius.circular(50.0),
-                )),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: const Icon(
-                        Icons.dehaze_sharp,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => {},
-                    ),
-                    const Text(
-                      'FERS',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                          fontSize: 24,
-                          letterSpacing:
-                              0 /*percentages not used in flutter. defaulting to zero*/,
-                          fontWeight: FontWeight.normal,
-                          height: 1),
-                    ),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: const BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 1),
-                        image: DecorationImage(
-                          image: AssetImage('assets/Profile.png'),
-                          fit: BoxFit.fitWidth,
-                        ),
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(25, 25)),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 18),
-                ),
-                Text(
-                  'Hello ' + UserLocalData.getName,
-                  style: const TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                    fontFamily: 'Poppins',
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                GestureDetector(
-                  onDoubleTap: () {
-                    bool x;
-                    if (online) {
-                      x = false;
-                    } else {
-                      x = true;
-                    }
-                    setState(() {
-                      online = x;
-                    });
-                    updatelocation();
-                  },
-                  child: SizedBox(
-                      width: 400,
-                      height: 400,
-                      child: Container(
-                        margin: const EdgeInsets.all(100.0),
-                        decoration: BoxDecoration(
-                            color:
-                                online ? Colors.greenAccent : Colors.redAccent,
-                            shape: BoxShape.circle),
-                      )),
-                ),
-              ],
+        appBar: AppBar(title: const Text('Driver Dashboard')),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Center(
+              child: Text(
+                "SOS Request",
+                style:
+                    const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          FutureBuilder<sosrequest?>(
-              future: getrequests(),
-              builder:
-                  (BuildContext context, AsyncSnapshot<sosrequest?> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return const SizedBox(
-                      height: double.infinity,
-                      width: double.infinity,
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  default:
-                    if ((snapshot.hasError)) {
-                      return _errorWidget();
-                    } else {
-                      if (snapshot.hasData) {
-                        if (snapshot.data != null) {
-                          int x = snapshot.data!.status!;
-                          return ListTile(
-                            title: const Text("SOS REQUEST"),
-                            trailing: TextButton(
-                              child: (x == 1)
-                                  ? const Text("Pick Up")
-                                  : const Text("Drop off"),
-                              onPressed: () async {
-                                AppUser user = await UserAPI()
-                                    .getInfo(uid: snapshot.data!.userUid!);
-                                await openmap(user);
-                              },
-                            ),
+            Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.80,
+                child: FutureBuilder<Sosrequest?>(
+                    future: getrequests(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<Sosrequest?> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return const SizedBox(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: CircularProgressIndicator.adaptive(),
                           );
-                        } else {
-                          return const SizedBox();
-                        }
+                        default:
+                          if ((snapshot.hasError)) {
+                            return _errorWidget();
+                          } else {
+                            if (snapshot.hasData) {
+                              if (snapshot.data != null) {
+                                int x = snapshot.data!.status;
+                                return Column(
+                                  children: [
+                                    Center(
+                                      child: Image.asset("assets/car-icon.png"),
+                                    ),
+                                    FlatButton(
+                                        color: Colors.red,
+                                        minWidth: 100,
+                                        onPressed: () async {
+                                          AppUser user = await UserAPI()
+                                              .getInfo(
+                                                  uid: snapshot.data!.userUid);
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          DriverMap(user)));
+                                        },
+                                        child: const Text("Respond"))
+                                  ],
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            }
+                          }
                       }
-                    }
-                }
-                return const SizedBox();
-              }),
-        ],
-      ),
-    );
+                      return const SizedBox();
+                    }),
+              ),
+            ),
+          ],
+        ));
   }
 
   void updatelocation() async {
@@ -188,15 +113,15 @@ class _DriverDashboardState extends State<DriverDashboard> {
     }
   }
 
-  Future<sosrequest?> getrequests() async {
-    sosrequest? _req;
+  Future<Sosrequest?> getrequests() async {
+    Sosrequest? _req;
     final QuerySnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection('request')
         .where('status', isNotEqualTo: 0)
         .get();
     for (DocumentSnapshot<Map<String, dynamic>> element in doc.docs) {
-      final sosrequest _temp = sosrequest.fromJson(element.data()!);
+      final Sosrequest _temp = Sosrequest.fromJson(element.data()!);
       _req = _temp;
     }
     return _req;

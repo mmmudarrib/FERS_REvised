@@ -6,7 +6,7 @@ import '../models/appuser.dart';
 
 class AuthMethods {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  static User? get getCurrentUser => _auth.currentUser;
   Future<User?> signupWithEmailAndPassword({
     required String email,
     required String password,

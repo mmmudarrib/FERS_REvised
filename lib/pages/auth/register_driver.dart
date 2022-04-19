@@ -337,7 +337,7 @@ class _RegisterDriverState extends State<RegisterDriver> {
   }
 
   _getCurrentLocation() async {
-    requestLocationPermission();
+    await requestLocationPermission();
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {

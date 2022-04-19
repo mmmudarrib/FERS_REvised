@@ -28,7 +28,7 @@ class UserAPI {
 
   Future<AppUser?> allDriversnearby(LocationUser locationUser) async {
     AppUser? _user;
-    double min = -100000;
+    double min = double.maxFinite;
     final QuerySnapshot<Map<String, dynamic>> doc = await _instance
         .collection(_collection)
         .where('isDriver', isEqualTo: true)
@@ -37,7 +37,7 @@ class UserAPI {
       final AppUser _temp = AppUser.fromDocument(element);
       double dis = Geolocator.distanceBetween(_temp.location.lat,
           _temp.location.long, locationUser.long, locationUser.long);
-      if (dis >= min) {
+      if (dis <= min) {
         min = dis;
         _user = _temp;
       }

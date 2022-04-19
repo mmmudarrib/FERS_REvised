@@ -1,9 +1,8 @@
-import 'package:fers/pages/splashScreen.dart';
+import 'package:fers/pages/splash_screen.dart';
 import 'package:fers/providers/app_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'database/userlocaldata.dart';
 
 void main() async {
