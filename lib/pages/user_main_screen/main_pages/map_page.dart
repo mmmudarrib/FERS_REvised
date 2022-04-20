@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 
 class MyMap extends StatefulWidget {
-  final String userid;
+  final AppUser userid;
   const MyMap(this.userid, {Key? key}) : super(key: key);
   @override
   _MyMapState createState() => _MyMapState();
@@ -16,11 +16,12 @@ class _MyMapState extends State<MyMap> {
 
   final loc.Location location = loc.Location();
   late GoogleMapController _controller;
-  late AppUser user;
   bool _added = false;
+  late AppUser user;
   @override
   void initState() {
     super.initState();
+    user = widget.userid;
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(size: Size(16, 16)), 'assets/car-icon.png')
         .then((d) {
@@ -50,8 +51,7 @@ class _MyMapState extends State<MyMap> {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              user = AppUser.fromDocument(snapshot.data!.docs
-                  .singleWhere((element) => element.id == widget.userid));
+              user = widget.userid;
 
               return GoogleMap(
                 mapType: MapType.normal,
@@ -106,8 +106,7 @@ class _MyMapState extends State<MyMap> {
 
   Future<void> mymap(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) async {
-    user = AppUser.fromDocument(snapshot.data!.docs
-        .singleWhere((element) => element.id == widget.userid));
+    user = widget.userid;
     await _controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(user.location.lat, user.location.long),

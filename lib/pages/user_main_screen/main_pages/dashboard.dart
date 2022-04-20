@@ -8,6 +8,9 @@ import 'package:fers/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../database/auth_methods.dart';
+import '../../auth/login.dart';
+
 class ContainerWidget extends StatefulWidget {
   const ContainerWidget({Key? key}) : super(key: key);
 
@@ -20,6 +23,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   @override
   void initState() {
     _currentLocation = UserLocalData.getLocation;
+    updatelocation();
     super.initState();
   }
 
@@ -63,17 +67,25 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                           fontWeight: FontWeight.normal,
                           height: 1),
                     ),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: const BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 1),
-                        image: DecorationImage(
-                          image: AssetImage('assets/Profile.png'),
-                          fit: BoxFit.fitWidth,
+                    InkWell(
+                      onTap: () {
+                        AuthMethods().signOut();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const LoginScreen()));
+                      },
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(196, 196, 196, 1),
+                          image: DecorationImage(
+                            image: AssetImage('assets/Profile.png'),
+                            fit: BoxFit.fitWidth,
+                          ),
+                          borderRadius:
+                              BorderRadius.all(Radius.elliptical(25, 25)),
                         ),
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(25, 25)),
                       ),
                     ),
                   ],
@@ -126,7 +138,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(UserLocalData.getUID)
-        .update({'location': _currentLocation});
+        .update({'location': _currentLocation.toJson()});
   }
 
   showConfirmationDialog(BuildContext context) {
@@ -229,10 +241,14 @@ class _CustomDialogState extends State<CustomDialog> {
     if (!_sossent) {
       AppUser? user = await UserAPI().allDriversnearby(widget.currentLocation);
       Sosrequest sos = Sosrequest(
-          userUid: UserLocalData.getUID,
-          driverUid: user!.uid,
-          status: 1,
-          magnitude: 1);
+        userUid: UserLocalData.getUID,
+        driverUid: user!.uid,
+        status: 1,
+        magnitude: 1,
+        date: DateTime.now().toString(),
+        lat: widget.currentLocation.lat,
+        long: widget.currentLocation.long,
+      );
 
       await FirebaseFirestore.instance
           .collection('request')
@@ -241,8 +257,8 @@ class _CustomDialogState extends State<CustomDialog> {
       setState(() {
         _sossent = true;
       });
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => MyMap(user.uid)));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => MyMap(user)));
     }
   }
 }

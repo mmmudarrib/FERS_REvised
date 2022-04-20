@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:fers/database/userlocaldata.dart';
 import 'package:fers/pages/driver_main_pages/driver_dashboard.dart';
-import 'package:fers/pages/user_main_screen/main_pages/dashboard.dart';
 import 'package:fers/pages/user_main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
 

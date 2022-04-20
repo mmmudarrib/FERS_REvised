@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fers/models/sosrequest.dart';
 import 'package:fers/widgets/custom_toast.dart';
 import 'package:geolocator/geolocator.dart';
 import '../models/appuser.dart';
@@ -20,7 +21,6 @@ class UserAPI {
         .set(appUser.toMap())
         .catchError((Object e) {
       CustomToast.errorToast(message: e.toString());
-      // ignore: invalid_return_type_for_catch_error
       return false;
     });
     return true;
@@ -43,5 +43,18 @@ class UserAPI {
       }
     }
     return _user;
+  }
+
+  Future<List<Sosrequest>> getsosrequests(String useruid) async {
+    List<Sosrequest> requests = <Sosrequest>[];
+    final QuerySnapshot<Map<String, dynamic>> doc = await _instance
+        .collection('request')
+        .where('user_uid', isEqualTo: useruid)
+        .get();
+    for (DocumentSnapshot<Map<String, dynamic>> element in doc.docs) {
+      final Sosrequest _temp = Sosrequest.fromJson(element.data()!);
+      requests.add(_temp);
+    }
+    return requests;
   }
 }
