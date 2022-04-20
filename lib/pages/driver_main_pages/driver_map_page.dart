@@ -52,7 +52,7 @@ class _DriverMapState extends State<DriverMap> {
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
@@ -127,7 +127,7 @@ class _DriverMapState extends State<DriverMap> {
                               await FirebaseFirestore.instance
                                   .collection('request')
                                   .doc(querySnapshot.docs.first.id)
-                                  .update({'status': '2'}) // <-- Updated data
+                                  .update({'status': 2}) // <-- Updated data
                                   .then((_) => Navigator.of(context)
                                       .pushReplacement(MaterialPageRoute(
                                           builder: (BuildContext context) =>
@@ -178,6 +178,7 @@ class _DriverMapState extends State<DriverMap> {
     AppUser userw = await UserAPI().getInfo(uid: widget.user);
     setState(() {
       user = userw;
+      loading = false;
     });
   }
 }

@@ -46,7 +46,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             ),
                             backgroundColor: Colors.red,
                           ),
-                          title: Text('Request no $index'),
+                          title: Text('Request no ${index + 1}'),
                           subtitle: Text(
                               "Date: ${snapshot.data![index].date} \n Lat:${snapshot.data![index].lat},long:${snapshot.data![index].long} \n Responded by: Hashir"),
                           trailing: const Icon(
