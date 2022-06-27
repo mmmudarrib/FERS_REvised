@@ -7,6 +7,7 @@ import 'package:fers/pages/user_main_screen/main_pages/map_page.dart';
 import 'package:fers/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 import '../../../database/auth_methods.dart';
 import '../../auth/login.dart';
@@ -125,15 +126,39 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
-  void updatelocation() async {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      LocationUser loc =
-          LocationUser(lat: position.latitude, long: position.longitude);
-      setState(() {
-        _currentLocation = loc;
-      });
+  Future<void> _getLocation() async {
+    Location location = Location();
+    LocationData _locationData;
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return null;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return null;
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    setState(() {
+      _currentLocation = LocationUser(
+          lat: _locationData.latitude!, long: _locationData.longitude!);
     });
+  }
+
+  void updatelocation() async {
+    await _getLocation();
 
     await FirebaseFirestore.instance
         .collection('users')
