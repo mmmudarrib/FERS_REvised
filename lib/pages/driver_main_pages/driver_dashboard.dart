@@ -116,7 +116,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(UserLocalData.getUID)
-        .update({'location': _currentLocation});
+        .update({'location': _currentLocation.toJson()});
   }
 
   Future<void> openmap(AppUser user) async {
