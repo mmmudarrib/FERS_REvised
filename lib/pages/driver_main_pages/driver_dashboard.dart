@@ -104,21 +104,19 @@ class _DriverDashboardState extends State<DriverDashboard> {
   }
 
   void updatelocation() async {
-    if (online) {
-      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-          .then((Position position) {
-        LocationUser loc =
-            LocationUser(lat: position.latitude, long: position.longitude);
-        setState(() {
-          _currentLocation = loc;
-        });
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      LocationUser loc =
+          LocationUser(lat: position.latitude, long: position.longitude);
+      setState(() {
+        _currentLocation = loc;
       });
+    });
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(UserLocalData.getUID)
-          .update({'location': _currentLocation});
-    }
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(UserLocalData.getUID)
+        .update({'location': _currentLocation});
   }
 
   Future<void> openmap(AppUser user) async {
