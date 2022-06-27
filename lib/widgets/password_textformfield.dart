@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'custom_validator.dart';
-
 class PasswordTextFormField extends StatefulWidget {
   const PasswordTextFormField({
     required TextEditingController controller,
     this.title = 'Password',
+    this.validator,
     Key? key,
   })  : _controller = controller,
         super(key: key);
   final TextEditingController _controller;
   final String title;
+  final String? Function(String? value)? validator;
+
   @override
   PasswordTextFormFieldState createState() => PasswordTextFormFieldState();
 }
@@ -40,7 +41,7 @@ class PasswordTextFormFieldState extends State<PasswordTextFormField> {
         obscureText: _notVisible,
         textInputAction: TextInputAction.done,
         cursorColor: Theme.of(context).colorScheme.secondary,
-        validator: (String? value) => CustomValidator.password(value),
+        validator: (String? value) => widget.validator!(value),
         decoration: InputDecoration(
           labelText: widget.title,
           hintText: widget.title,

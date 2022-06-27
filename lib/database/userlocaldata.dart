@@ -15,7 +15,8 @@ class UserLocalData {
   static const String _displayNameKey = 'DISPLAYNAMEKEY';
   static const String _emailKey = 'EMAILKEY';
   static const String _isDriverKey = 'ISDRIVERKEY';
-  static const String _imageUrlKey = 'IMAGEURLKEY';
+  static const String _phoneKey = 'PHONEKEY';
+  static const String _cityKey = 'CITYKEY';
   static const String _followsKey = 'FOLLOWSKEY';
   static const String _locationKey = 'LOCATIONKEY';
 
@@ -35,8 +36,11 @@ class UserLocalData {
   static Future<void> setIsDriver(bool isVerified) async =>
       _preferences!.setBool(_isDriverKey, isVerified);
 
-  static Future<void> setImageUrl(String url) async =>
-      _preferences!.setString(_imageUrlKey, url);
+  static Future<void> setCity(String city) async =>
+      _preferences!.setString(_cityKey, city);
+
+  static Future<void> setPhone(String phone) async =>
+      _preferences!.setString(_phoneKey, phone);
 
   static Future<void> setFollowings(List<String> followings) async =>
       _preferences!.setStringList(_followsKey, followings);
@@ -53,7 +57,8 @@ class UserLocalData {
   }
 
   static bool get getIsDriver => _preferences!.getBool(_isDriverKey) ?? false;
-  static String get getImageUrl => _preferences!.getString(_imageUrlKey) ?? '';
+  static String get getCity => _preferences!.getString(_cityKey) ?? '';
+  static String get getPhone => _preferences!.getString(_phoneKey) ?? '';
 
   static List<String> get getFollowings =>
       _preferences!.getStringList(_followsKey) ?? <String>[];
@@ -63,7 +68,8 @@ class UserLocalData {
     setDisplayName(appUser.firstName + " " + appUser.lastName);
     setEmail(appUser.email);
     setIsDriver(appUser.isDriver ?? false);
-    setImageUrl(appUser.imageURL ?? '');
     setLocation(appUser.location);
+    setCity(appUser.city ?? '');
+    setPhone(appUser.phone ?? '');
   }
 }

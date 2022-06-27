@@ -90,7 +90,10 @@ class _MyMapState extends State<MyMap> {
                 child: ListTile(
                   leading: const CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/Profile.png'),
+                    child: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
                   ),
                   title: Text(user.firstName + " " + user.lastName),
                   subtitle: const Text("Arriving in 10 mins \n15 Kms away "),

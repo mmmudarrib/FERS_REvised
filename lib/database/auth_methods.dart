@@ -49,6 +49,37 @@ class AuthMethods {
     }
   }
 
+  Future<bool> forgetPassword(String email) async {
+    try {
+      _auth.sendPasswordResetEmail(email: email.trim());
+      return true;
+    } catch (error) {
+      CustomToast.errorToast(message: error.toString());
+    }
+    return false;
+  }
+
+  Future<bool> deleteUser(String pass) async {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(
+        email: UserLocalData.getEmail,
+        password: pass,
+      )
+          .catchError((Object obj) {
+        CustomToast.errorToast(message: obj.toString());
+        return false;
+      });
+      await UserAPI().deleteUser();
+      await _auth.currentUser?.delete();
+      await signOut();
+      return true;
+    } catch (error) {
+      CustomToast.errorToast(message: error.toString());
+    }
+    return false;
+  }
+
   Future<void> signOut() async {
     UserLocalData.signout();
     await _auth.signOut();

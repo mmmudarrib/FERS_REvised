@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fers/database/userlocaldata.dart';
 import 'package:fers/models/sosrequest.dart';
 import 'package:fers/widgets/custom_toast.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,7 +26,32 @@ class UserAPI {
     return true;
   }
 
-  Future<AppUser?> allDriversnearby(LocationUser locationUser) async {
+  Future<bool> deleteUser() async {
+    await _instance
+        .collection(_collection)
+        .doc(UserLocalData.getUID)
+        .delete()
+        .catchError((Object e) {
+      CustomToast.errorToast(message: e.toString());
+    });
+    return true;
+  }
+
+  Future<bool> updateUser(String name, String phone, String city) async {
+    await _instance
+        .collection(_collection)
+        .doc(UserLocalData.getUID)
+        .update({'firstname': name, 'phone': phone, 'city': city}).catchError(
+            (Object e) {
+      CustomToast.errorToast(message: e.toString());
+    });
+    UserLocalData.setCity(city);
+    UserLocalData.setDisplayName(name);
+    UserLocalData.setPhone(phone);
+    return true;
+  }
+
+  Future<AppUser?> driversnearby(LocationUser locationUser) async {
     AppUser? _user;
     double min = double.maxFinite;
     final QuerySnapshot<Map<String, dynamic>> doc = await _instance

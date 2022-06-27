@@ -114,7 +114,7 @@ class _DriverMapState extends State<DriverMap> {
                             backgroundImage: AssetImage('assets/Profile.png'),
                           ),
                           title: Text(user.firstName + " " + user.lastName),
-                          subtitle: FlatButton(
+                          subtitle: TextButton(
                             child: const Text("Reached?"),
                             onPressed: () async {
                               QuerySnapshot<Map<String, dynamic>>
@@ -135,7 +135,7 @@ class _DriverMapState extends State<DriverMap> {
                                   .catchError(
                                       (error) => print('Failed: $error'));
                             },
-                            color: Colors.blue,
+                            // style: ButtonStyle(backgroundColor: Colors.blue),
                           ),
                           trailing: InkWell(
                             child: const Icon(Icons.navigation),

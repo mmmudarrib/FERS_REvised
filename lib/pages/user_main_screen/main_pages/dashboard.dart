@@ -77,12 +77,12 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       child: Container(
                         width: 32,
                         height: 32,
+                        child: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
                         decoration: const BoxDecoration(
-                          color: Color.fromRGBO(196, 196, 196, 1),
-                          image: DecorationImage(
-                            image: AssetImage('assets/Profile.png'),
-                            fit: BoxFit.fitWidth,
-                          ),
+                          color: Colors.transparent,
                           borderRadius:
                               BorderRadius.all(Radius.elliptical(25, 25)),
                         ),
@@ -239,7 +239,7 @@ class _CustomDialogState extends State<CustomDialog> {
 
   Future<void> sendsos() async {
     if (!_sossent) {
-      AppUser? user = await UserAPI().allDriversnearby(widget.currentLocation);
+      AppUser? user = await UserAPI().driversnearby(widget.currentLocation);
       Sosrequest sos = Sosrequest(
         userUid: UserLocalData.getUID,
         driverUid: user!.uid,

@@ -89,6 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             PasswordTextFormField(
                               controller: _password,
+                              validator: (String? value) =>
+                                  CustomValidator.isEmpty(value),
                             ),
                           ],
                         ),

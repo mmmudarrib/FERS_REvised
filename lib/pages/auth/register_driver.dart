@@ -116,10 +116,16 @@ class _RegisterDriverState extends State<RegisterDriver> {
                               validator: (String? value) =>
                                   CustomValidator.email(value),
                             ),
-                            PasswordTextFormField(controller: _password),
+                            PasswordTextFormField(
+                              controller: _password,
+                              validator: (String? value) =>
+                                  CustomValidator.passwordregex(value),
+                            ),
                             PasswordTextFormField(
                               controller: _confPassword,
                               title: 'Repeat Password',
+                              validator: (String? value) =>
+                                  CustomValidator.passwordregex(value),
                             ),
                           ],
                         ),

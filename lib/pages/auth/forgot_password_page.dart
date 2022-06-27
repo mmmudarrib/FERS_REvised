@@ -1,6 +1,11 @@
 import 'package:fers/widgets/button_widget.dart';
+import 'package:fers/widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../database/auth_methods.dart';
+import '../../widgets/custom_toast.dart';
+import '../../widgets/custom_validator.dart';
+import 'login.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -10,9 +15,8 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  String email = '';
-
-  final _emailKey = GlobalKey<FormState>();
+  final TextEditingController _email = TextEditingController();
+  final _key = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -98,33 +102,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         ),
                       ),
                       Form(
-                        child: buildTextField(
-                          "Email",
-                          Icons.email_outlined,
-                          false,
-                          size,
-                          (valuemail) {
-                            if (valuemail.length < 5) {
-                              buildSnackError(
-                                'Invalid email',
-                                context,
-                                size,
-                              );
-                              return '';
-                            }
-                            if (!RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
-                                .hasMatch(valuemail)) {
-                              buildSnackError(
-                                'Invalid email',
-                                context,
-                                size,
-                              );
-                              return '';
-                            }
-                            return null;
-                          },
-                          isDarkMode,
+                        key: _key,
+                        child: CustomTextFormField(
+                          title: 'Email',
+                          controller: _email,
+                          hint: 'test@test.com',
+                          validator: (String? value) =>
+                              CustomValidator.email(value),
                         ),
                       ),
                       Padding(
@@ -142,7 +126,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               Colors.white,
                             ],
                             onPressed: () async {
-                              if (_emailKey.currentState!.validate()) {}
+                              if (_key.currentState!.validate()) {
+                                final bool sended = await AuthMethods()
+                                    .forgetPassword(_email.text);
+
+                                if (sended) {
+                                  CustomToast.showSnackBar(
+                                      context: context,
+                                      text:
+                                          'Email send at ${_email.text.trim()}');
+                                  if (!mounted) return;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                  );
+                                }
+                              }
                             }),
                       ),
                     ],
@@ -150,102 +151,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool pwVisible = false;
-  Widget buildTextField(
-    String hintText,
-    IconData icon,
-    bool password,
-    size,
-    FormFieldValidator validator,
-    bool isDarkMode,
-  ) {
-    return Padding(
-      padding: EdgeInsets.only(top: size.height * 0.025),
-      child: Container(
-        width: size.width * 0.9,
-        height: size.height * 0.06,
-        decoration: BoxDecoration(
-          color: isDarkMode ? Colors.black : const Color(0xffF7F8F8),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Form(
-          key: _emailKey,
-          child: TextFormField(
-            style: TextStyle(
-                color: isDarkMode ? const Color(0xffADA4A5) : Colors.black),
-            onChanged: (value) {
-              setState(() {
-                email = value;
-              });
-            },
-            validator: validator,
-            textInputAction: TextInputAction.next,
-            obscureText: password ? !pwVisible : false,
-            decoration: InputDecoration(
-              errorStyle: const TextStyle(height: 0),
-              hintStyle: const TextStyle(
-                color: Color(0xffADA4A5),
-              ),
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(
-                top: size.height * 0.02,
-              ),
-              hintText: hintText,
-              prefixIcon: Padding(
-                padding: EdgeInsets.only(
-                  top: size.height * 0.005,
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xff7B6F72),
-                ),
-              ),
-              suffixIcon: password
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                        top: size.height * 0.005,
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            pwVisible = !pwVisible;
-                          });
-                        },
-                        child: pwVisible
-                            ? const Icon(
-                                Icons.visibility_off_outlined,
-                                color: Color(0xff7B6F72),
-                              )
-                            : const Icon(
-                                Icons.visibility_outlined,
-                                color: Color(0xff7B6F72),
-                              ),
-                      ),
-                    )
-                  : null,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildSnackError(
-      String error, context, size) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        backgroundColor: Colors.black,
-        content: SizedBox(
-          height: size.height * 0.02,
-          child: Center(
-            child: Text(error),
           ),
         ),
       ),

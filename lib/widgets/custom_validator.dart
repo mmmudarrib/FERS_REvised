@@ -3,7 +3,16 @@ class CustomValidator {
     if (!RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value!)) {
-      return 'Email is Invalide';
+      return 'Email is invalid';
+    }
+    return null;
+  }
+
+  static String? passwordregex(String? value) {
+    if (!RegExp(
+            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$")
+        .hasMatch(value!)) {
+      return 'Password should contain at least one upper case,one lower case, one digit,one Special character and 8 characters';
     }
     return null;
   }

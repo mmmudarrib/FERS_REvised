@@ -6,19 +6,21 @@ class AppUser {
     required this.firstName,
     required this.lastName,
     required this.email,
+    this.city,
+    this.phone,
     this.isDriver = false,
     this.status = true,
     this.timestamp,
-    this.imageURL = '',
     required this.location,
   });
   final String uid;
   final String firstName;
   final String lastName;
   final String email;
+  final String? phone;
+  final String? city;
   final bool? status;
   final bool? isDriver;
-  final String? imageURL;
   final String? timestamp;
   final LocationUser location;
 
@@ -30,7 +32,8 @@ class AppUser {
       'email': email.trim(),
       'isDriver': isDriver ?? false,
       'status': status ?? true,
-      'imageURL': imageURL ?? '',
+      'phone': phone ?? '',
+      'city': city ?? '',
       'location': location.toJson(),
       'timestamp': timestamp ?? DateTime.now(),
     };
@@ -45,7 +48,8 @@ class AppUser {
       email: doc.data()!['email'].toString(),
       isDriver: doc.data()!['isDriver'] ?? false,
       status: doc.data()!['status'] ?? true,
-      imageURL: doc.data()!['imageURL'] ?? '',
+      city: doc.data()!['city'] ?? '',
+      phone: doc.data()!['phone'] ?? '',
       location: (doc['location'] != null
           ? LocationUser.fromJson(doc['location'])
           : null)!,
