@@ -72,6 +72,7 @@ class UserAPI {
 
   Future<List<Sosrequest>> getsosrequests(String useruid) async {
     List<Sosrequest> requests = <Sosrequest>[];
+
     final QuerySnapshot<Map<String, dynamic>> doc = await _instance
         .collection('request')
         .where('user_uid', isEqualTo: useruid)
@@ -80,6 +81,7 @@ class UserAPI {
       final Sosrequest _temp = Sosrequest.fromJson(element.data()!);
       requests.add(_temp);
     }
+
     return requests;
   }
 }

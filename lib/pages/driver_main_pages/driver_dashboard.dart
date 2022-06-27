@@ -60,12 +60,13 @@ class _DriverDashboardState extends State<DriverDashboard> {
                   stream: FirebaseFirestore.instance
                       .collection('request')
                       .where('status', isEqualTo: 1)
+                      .where('driver_uid', isEqualTo: UserLocalData.getUID)
                       .snapshots(),
                   builder: (context, snapshots) {
-                    if (!snapshots.hasData) {
+                    if (!snapshots.hasData || snapshots.data!.docs.isEmpty) {
                       return const Center(
                         child: Text(
-                          'Requests not available',
+                          'No Requests available',
                         ),
                       );
                     } else {

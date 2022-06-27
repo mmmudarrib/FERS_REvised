@@ -252,12 +252,12 @@ class _CustomDialogState extends State<CustomDialog> {
 
       await FirebaseFirestore.instance
           .collection('request')
-          .doc(UserLocalData.getUID + "-" + user.uid)
+          .doc()
           .set(sos.toJson());
       setState(() {
         _sossent = true;
       });
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
           MaterialPageRoute(builder: (BuildContext context) => MyMap(user)));
     }
   }

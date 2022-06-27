@@ -28,7 +28,7 @@ class _RecordScreenState extends State<RecordScreen> {
             child: FutureBuilder<List<Sosrequest>>(
                 future: UserAPI().getsosrequests(UserLocalData.getUID),
                 builder: (context, snapshot) {
-                  if (snapshot.data == null) {
+                  if (snapshot.data == null || snapshot.data!.isEmpty) {
                     return const Center(
                       child: Text("No Requests Found"),
                     );
